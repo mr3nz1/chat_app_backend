@@ -10,4 +10,12 @@ const {
     getAllUsers,
 } = require("../controllers/users")
 
-router.get("/", )
+// auth
+router.post("/login", login)
+router.post("/register", register)
+
+// other
+router.get("/", getAllUsers)
+router.route("/:id").get(getUser).patch(editUser).delete(removeUser)
+
+module.exports = router

@@ -17,7 +17,17 @@ app.use(
     }),
 )
 
+// routes
+const userRoutes = require("./routes/users")
+app.use("/api/v1/users", userRoutes)
 
+// errors
+const notFound = require("./middlewares/notFound")
+const errorHandler = require("./middlewares/errorHandler")
+
+// middlewares
+app.use(notFound)
+app.use(errorHandler)
 
 // start server
 const startServer = async () => {
