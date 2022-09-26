@@ -1,0 +1,22 @@
+{
+  "name": "chat_app_backend",
+  "version": "1.0.0",
+  "description": "backend for social media and chat app like instagram",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "express-async-errors": "^3.1.1",
+    "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^2.0.20",
+    "sequelize": "^6.23.1"
+  }
+}
