@@ -18,6 +18,9 @@ router.post("/register", register)
 
 // other
 router.get("/", getAllUsers)
-router.route("/:id").get(getUser).patch(auth, fileUpload.array("uploadedImages", 2), editUser).delete(auth, removeUser)
+router.route("/:id").get(getUser).patch(auth, fileUpload.fields([
+    { name: "avatar", maxCount: 1 },
+    { name: "banner", maxCount: 1 }
+]), editUser).delete(auth, removeUser)
 
 module.exports = router

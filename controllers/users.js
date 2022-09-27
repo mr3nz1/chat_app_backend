@@ -93,7 +93,7 @@ const editUser = async (req, res) => {
 
     console.log(req.body)
 
-    console.log(res.files)
+    console.log(req.files)
 }
 
 const removeUser = async (req, res) => {
