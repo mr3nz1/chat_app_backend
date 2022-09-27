@@ -6,7 +6,21 @@ const errorHandler = (err, req, res, next) => {
         message: err.message || "Something went wrong try again later"
     }
 
-    return res.status(customError.statusCode).json({ msg: customError.message })
+    
+    if (err.name === "SequelizeValidationError") {
+        const errors = err.errors.map(error => {
+            return {
+                field: error.path,
+                message: error.message,
+                value: error.value
+            }
+        });
+
+        return res.status(customError.statusCode).json(errors)
+    }
+
+    // return res.status(customError.statusCode).json({ msg: customError.message })
+    return res.status(customError.statusCode).json(err)
 }
 
 module.exports = errorHandler

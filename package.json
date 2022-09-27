@@ -4,7 +4,7 @@
   "description": "backend for social media and chat app like instagram",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +19,7 @@
     "multer": "^1.4.5-lts.1",
     "mysql2": "^2.3.3",
     "nodemon": "^2.0.20",
-    "sequelize": "^6.23.1"
+    "sequelize": "^6.23.1",
+    "uuid": "^9.0.0"
   }
 }
