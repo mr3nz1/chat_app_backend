@@ -1,6 +1,7 @@
 const User = require("../models/User")
 const { BadRequestError } = require("../errors")
 const uuid = require("uuid")
+const { StatusCodes } = require("http-status-codes")
 
 const login = async (req, res) => {
     res.send("login route")
@@ -24,14 +25,18 @@ const register = async (req, res) => {
         password
     }
 
-    // User.sync({ alter: true })
-
     const user = await User.build(tempUser)
 
     const validate = await user.validate()
 
-    console.log(validate)
-    // user.save()
+    const token = await user.createJWT()
+
+    await user.save()
+
+    // res.status(StatusCodes.CREATED).json({
+    //     userName: tempUser.userName,
+    //     token
+    // })
 }
 
 const getUser = async (req, res) => {

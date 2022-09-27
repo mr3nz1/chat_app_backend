@@ -1,7 +1,28 @@
 const { DataTypes, Model } = require("sequelize")
 const { sequelize } = require("../db/connectDB")
+const jwt = require("jsonwebtoken")
+const bcrypt = require("bcryptjs")
 
-class User extends Model {}
+class User extends Model {
+    async createJWT() {
+        const payload = {
+            userId: this.id
+        }
+
+        const secretKey = process.env.JWT_SECRET_KEY
+
+        const options = {
+            expiresIn: process.env.JWT_LIFETIME
+        }
+
+        return jwt.sign(payload, secretKey, options)
+    }
+
+    async comparePasswords(candidatePassword) {
+        const isMatch = await bcrypt.compare(candidatePassword, this.password)
+        return isMatch
+    }
+}
 
 User.init(
     {

@@ -19,6 +19,19 @@ const errorHandler = (err, req, res, next) => {
         return res.status(customError.statusCode).json(errors)
     }
 
+
+    if (err.name === "SequelizeUniqueConstraintError") {
+        const errors = err.errors.map(error => {
+            return {
+                field: error.path,
+                message: error.message,
+                value: error.value
+            }
+        })
+
+        return res.status(customError.statusCode).json(errors)
+    }
+
     // return res.status(customError.statusCode).json({ msg: customError.message })
     return res.status(customError.statusCode).json(err)
 }
