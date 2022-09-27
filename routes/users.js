@@ -1,5 +1,7 @@
 const express = require("express")
 const router = express.Router()
+const auth = require("../middlewares/auth")
+const fileUpload = require("../utils/fileUpload")
 
 const {
     login,
@@ -16,6 +18,6 @@ router.post("/register", register)
 
 // other
 router.get("/", getAllUsers)
-router.route("/:id").get(getUser).patch(editUser).delete(removeUser)
+router.route("/:id").get(getUser).patch(auth, fileUpload.array("uploadedImages", 2), editUser).delete(auth, removeUser)
 
 module.exports = router
