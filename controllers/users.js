@@ -12,8 +12,8 @@ const login = async (req, res) => {
     if (!userNameOrEmail || !password) throw new BadRequestError("Ensure that all fields are filled")
 
     const isEmail = String(userNameOrEmail)
-            .toLowerCase()
-            .match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+        .toLowerCase()
+        .match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
 
     let user
 
@@ -35,7 +35,7 @@ const login = async (req, res) => {
 
     if (!user) throw new NotFoundError("User not found")
     const isPasswordCorrect = await user.comparePasswords(password)
-    if (!isPasswordCorrect) throw UnauthenticatedError("Password incorrect")
+    if (!isPasswordCorrect) throw new UnauthenticatedError("Password incorrect")
 
     const token = await user.createJWT()
     res.json({
@@ -62,12 +62,12 @@ const register = async (req, res) => {
         password
     }
 
-    
+
     const user = await User.build(tempUser)
     const validate = await user.validate()
     const token = await user.createJWT()
     await user.save()
-    
+
     res.status(StatusCodes.CREATED).json({
         msg: "success",
         token
@@ -91,9 +91,38 @@ const editUser = async (req, res) => {
         description
     } = req.body
 
-    console.log(req.body)
+    let tempUser = {
+        userName,
+        fullNames,
+        email,
+        password,
+        description,
+        profileImage: req?.files?.avatar ? req?.files?.avatar[0]?.path : null,
+        bannerImage: req?.files?.banner ? req?.files?.banner[0]?.path : null,
+    }
 
-    console.log(req.files)
+    tempUser = Object.keys(tempUser)
+        .filter((key) => tempUser[key] != null)
+        .reduce((prevKeys, key) => ({ ...prevKeys, [key]: tempUser[key] }), {})
+
+    const user = await User.findOne({
+        where: {
+            "id": req.user.userId
+        }
+    })
+
+    if (!user) throw new NotFoundError("User not found")
+    
+    await user.set(
+        tempUser
+    )
+
+    const validate = await user.validate()
+    await user.save(Object.keys(tempUser))
+
+    res.json({
+        msg: "success"
+    })
 }
 
 const removeUser = async (req, res) => {
