@@ -2,6 +2,7 @@ const { DataTypes, Model } = require("sequelize")
 const { sequelize } = require("../db/connectDB")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs")
+const fs = require("fs")
 
 class User extends Model {
     async createJWT() {
@@ -93,5 +94,42 @@ User.beforeCreate(async (user) => {
 User.beforeUpdate(async (user) => {
     const salt = await bcrypt.genSalt(10)
     user.password = await bcrypt.hash(user.password, salt)
+
+    if (user?.profileImage) {
+        fs.unlink(user._previousDataValues.profileImage, (err) => {
+            console.log(err)
+        })
+    }
+
+    if (user?.bannerImage) {
+        fs.unlink(user._previousDataValues.bannerImage, (err) => {
+            console.log(err)
+        })
+    }
+
 })
+
+User.beforeDestroy(async (user) => {
+    // delete profile image
+    fs.unlink(user._previousDataValues.profileImage, (err) => {
+        console.log(err)
+    })
+
+    // delete banner image
+    fs.unlink(user._previousDataValues.bannerImage, (err) => {
+        console.log(err)
+    })
+})
+
+// User.onDelete(async (user) => {
+//     if (user?.profileImage) {
+//         fs.unlink(user._previousDataValues.profileImage)
+//     }
+
+//     if (!user?.bannerImage) {
+//         fs.unlink(user._previousDataValues.bannerImage)
+//     }
+// })
+
+
 module.exports = User

@@ -38,7 +38,7 @@ const login = async (req, res) => {
     if (!isPasswordCorrect) throw new UnauthenticatedError("Password incorrect")
 
     const token = await user.createJWT()
-    res.json({
+    res.status(StatusCodes.OK).json({
         msg: "success",
         token
     })
@@ -107,7 +107,7 @@ const editUser = async (req, res) => {
 
     const user = await User.findOne({
         where: {
-            "id": req.user.userId
+            id: req.user.userId
         }
     })
 
@@ -120,13 +120,23 @@ const editUser = async (req, res) => {
     const validate = await user.validate()
     await user.save(Object.keys(tempUser))
 
-    res.json({
-        msg: "success"
+    res.status(StatusCodes.OK).json({
+        msg: "success",
     })
 }
 
 const removeUser = async (req, res) => {
-    res.send("removeUser route")
+    const { userId } = req.user
+    const user = await User.findOne({ 
+        where: {
+            id: userId
+        } 
+    })
+    await user.destroy()
+
+    res.status(StatusCodes.CREATED).json({
+        msg: "success",
+    })
 }
 
 const getAllUsers = async (req, res) => {
