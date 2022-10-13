@@ -3,7 +3,7 @@ require("express-async-errors")
 
 const express = require("express")
 const app = express()
-const { connectDB } = require("./db/connectDB")
+const { connectDB, sequelize } = require("./db/connectDB")
 const cors = require("cors")
 
 const port = process.env.PORT || 5000
@@ -19,6 +19,9 @@ app.use(
 
 // routes
 const userRoutes = require("./routes/users")
+const postRoutes = require("./routes/posts")
+
+app.use("/api/v1/posts", postRoutes)
 app.use("/api/v1/users", userRoutes)
 
 // errors
@@ -40,3 +43,5 @@ const startServer = async () => {
 }
 
 startServer()
+
+const associatePostAndUser = require("./models/associations/associatePostAndUser")

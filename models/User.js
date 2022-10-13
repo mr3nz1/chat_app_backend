@@ -3,6 +3,7 @@ const { sequelize } = require("../db/connectDB")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs")
 const fs = require("fs")
+const Post = require("./Post")
 
 class User extends Model {
     async createJWT() {
@@ -78,7 +79,15 @@ User.init(
             validate: {
                 max: 100
             }
-        }
+        },
+        // postId: {
+        //     type: DataTypes.STRING,
+        //     references: {
+        //       model: Post,
+        //       key: 'id',
+        //       allowNull: false
+        //     }
+        // }
     },
     {
         sequelize,
@@ -120,16 +129,5 @@ User.beforeDestroy(async (user) => {
         console.log(err)
     })
 })
-
-// User.onDelete(async (user) => {
-//     if (user?.profileImage) {
-//         fs.unlink(user._previousDataValues.profileImage)
-//     }
-
-//     if (!user?.bannerImage) {
-//         fs.unlink(user._previousDataValues.bannerImage)
-//     }
-// })
-
 
 module.exports = User
