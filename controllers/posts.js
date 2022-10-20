@@ -1,13 +1,44 @@
 const uuid = require("uuid")
 const { BadRequestError } = require("../errors")
 const Post = require("../models/Post")
+const User = require("../models/User")
+const StatusCodes = require("http-status-codes")
+const { NotFoundError } = require("../../../news_app/backend/errors")
 
-const getAllPosts = (req, res) => {
-    res.send("get all posts")
+const getAllPosts = async (req, res) => {    
+    const posts = await Post.findAll({
+        include: {
+            model: User,
+            id: { $col: "Posts.userId" },
+        }
+    })
+
+    if (!posts) throw new NotFoundError("problem occured when looking for posts")
+
+    res.status(StatusCodes.CREATED).json({
+        msg: "success",
+        posts
+    })
 }
 
-const getPost = (req, res) => {
-    res.send("get post")
+const getPost = async (req, res) => {
+    const { id } = req.params
+
+    const post = await Post.findOne({
+        include: {
+            model: User,
+            id: { $col: "Posts.userId" },
+            required: true
+        },
+        id
+    })
+
+    if (!post) throw new NotFoundError("problem occured when looking for post")
+
+    res.status(StatusCodes.CREATED).json({
+        msg: "success",
+        post
+    })
 }
 
 const newPost = async (req, res) => {
@@ -26,9 +57,9 @@ const newPost = async (req, res) => {
     }
 
     const post = await Post.build(tempPost)
-    const validate = await user.validate()
+    const validate = await post.validate()
     
-    await user.save()
+    await post.save()
 
     res.status(StatusCodes.CREATED).json({
         msg: "success"

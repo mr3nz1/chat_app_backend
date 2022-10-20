@@ -44,4 +44,4 @@ const startServer = async () => {
 
 startServer()
 
-const associatePostAndUser = require("./models/associations/associatePostAndUser")
+// const associatePostAndUser = require("./models/associations/associatePostAndUser")

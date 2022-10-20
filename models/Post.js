@@ -23,10 +23,10 @@ Post.init(
         // userId: {
         //     type: DataTypes.STRING,
         //     references: {
-        //         model: User,
+        //         model: "Users",
         //         key: "id",
-        //         allowNull: false
-        //     }
+        //     },
+        //     allowNull: false,
         // }
     },
     {
