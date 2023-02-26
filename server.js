@@ -32,6 +32,13 @@ const errorHandler = require("./middlewares/errorHandler")
 app.use(notFound)
 app.use(errorHandler)
 
+// sync models
+// const User = require("./models/User")
+// const Post = require("./models/Post")
+
+// User.sync()
+// Post.sync()
+
 // start server
 const startServer = async () => {
     try {
@@ -44,4 +51,3 @@ const startServer = async () => {
 
 startServer()
 
-// const associatePostAndUser = require("./models/associations/associatePostAndUser")

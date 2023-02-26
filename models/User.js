@@ -1,4 +1,4 @@
-const { DataTypes, Model } = require("sequelize")
+const { DataTypes, Model, Sequelize } = require("sequelize")
 const { sequelize } = require("../db/connectDB")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs")
@@ -80,14 +80,6 @@ User.init(
                 max: 100
             }
         },
-        // postId: {
-        //     type: DataTypes.STRING,
-        //     references: {
-        //       model: Post,
-        //       key: 'id',
-        //       allowNull: false
-        //     }
-        // }
     },
     {
         sequelize,

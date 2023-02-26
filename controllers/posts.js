@@ -6,13 +6,8 @@ const StatusCodes = require("http-status-codes")
 const { NotFoundError } = require("../../../news_app/backend/errors")
 
 const getAllPosts = async (req, res) => {    
-    const posts = await Post.findAll({
-        include: {
-            model: User,
-            id: { $col: "Posts.userId" },
-        }
-    })
-
+    const posts = await Post.findAll()
+    
     if (!posts) throw new NotFoundError("problem occured when looking for posts")
 
     res.status(StatusCodes.CREATED).json({
@@ -27,8 +22,6 @@ const getPost = async (req, res) => {
     const post = await Post.findOne({
         include: {
             model: User,
-            id: { $col: "Posts.userId" },
-            required: true
         },
         id
     })
@@ -48,7 +41,8 @@ const newPost = async (req, res) => {
 
     const { userId } = req.user
 
-    if (!content) throw new BadRequestError("Ensure that the submitted data is complete")    
+    if (!content || !userId) throw new BadRequestError("Ensure that the submitted data is complete")    
+
 
     const tempPost = {
         id: uuid.v4(),
@@ -57,6 +51,7 @@ const newPost = async (req, res) => {
     }
 
     const post = await Post.build(tempPost)
+
     const validate = await post.validate()
     
     await post.save()

@@ -20,14 +20,14 @@ Post.init(
                 max: 20
             }
         },
-        // userId: {
-        //     type: DataTypes.STRING,
-        //     references: {
-        //         model: "Users",
-        //         key: "id",
-        //     },
-        //     allowNull: false,
-        // }
+        userId: {
+            type: DataTypes.STRING,
+            references: {
+                model: "Users",
+                key: "id",
+            },
+            allowNull: false,
+        }
     },
     {
         sequelize,

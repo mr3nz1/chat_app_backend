@@ -59,7 +59,8 @@ const register = async (req, res) => {
         userName,
         fullNames,
         email,
-        password
+        password,
+        // posts: []
     }
 
 
