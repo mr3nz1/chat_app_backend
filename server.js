@@ -33,8 +33,10 @@ app.use(notFound)
 app.use(errorHandler)
 
 // sync models
-// const User = require("./models/User")
-// const Post = require("./models/Post")
+const User = require("./models/User")
+const Post = require("./models/Post")
+
+Post.belongsTo(User)
 
 // User.sync()
 // Post.sync()

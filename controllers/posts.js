@@ -6,7 +6,18 @@ const StatusCodes = require("http-status-codes")
 const { NotFoundError } = require("../../../news_app/backend/errors")
 
 const getAllPosts = async (req, res) => {    
-    const posts = await Post.findAll()
+    const posts = await Post.findAll({
+        include: [
+            {
+                model: User,
+                attributes: [
+                    "userName",
+                    "fullNames",
+                    "bannerImage"
+                ]
+            }
+        ]
+    })
     
     if (!posts) throw new NotFoundError("problem occured when looking for posts")
 
