@@ -33,6 +33,11 @@ const getPost = async (req, res) => {
     const post = await Post.findOne({
         include: {
             model: User,
+            attributes: [
+                "userName",
+                "fullNames",
+                "bannerImage"
+            ]
         },
         id
     })
@@ -72,12 +77,58 @@ const newPost = async (req, res) => {
     })
 }
 
-const editPost = (req, res) => {
-    res.send("edit post")
+const editPost = async (req, res) => {
+    const { id: postId } = req.params
+
+    const {
+        content
+    } = req.body
+
+    if (!content) throw new BadRequestError("Ensure that the submitted data is complete")
+
+    const tempPost = {
+        content
+    }
+
+    const post = await Post.findOne({ 
+        where: {
+            id: postId
+        }
+    });
+
+    if (!post) throw new NotFoundError("Post not found")
+
+    await post.set(
+        tempPost
+    )
+
+    const validate = await post.validate()
+    await post.save(Object.keys(tempPost))
+
+    res.status(StatusCodes.OK).json({
+        msg: "success"
+    })
 }
 
-const deletePost = (req, res) => {
-    res.send("delete post")
+const deletePost = async (req, res) => {
+    const { id: postId } = req.params
+
+    const post = await Post.findOne({
+        where: {
+            id: postId
+        }
+    })
+
+    if (!post) throw new NotFoundError("Post not found")
+
+    await post.destroy()
+
+    await post.save()
+
+    res.status(StatusCodes.OK).json({
+        msg: "success"
+    })
+
 }
 
 
